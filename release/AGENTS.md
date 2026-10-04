@@ -1,0 +1,3 @@
+# Release implementation
+
+Canonical build: node release/build.mjs. Native GitHub Releases is the provider; upstream generic artifact-release scripts currently target GitLab, so do not pretend they publish this provider. release.json declares the package/lifecycle; the built trace-release.json freezes version, source commit, archive size and hash. Publish archive plus manifest to a versioned Release, download both and verify before upgrading the installed consumer. Never publish node_modules, generated frontend, .setup state or provider credentials. Develop in this repository; never artifact-upgrade this Git checkout.

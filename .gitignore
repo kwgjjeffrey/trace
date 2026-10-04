@@ -1,0 +1,6 @@
+node_modules/
+catalog/frontend/view.bundle.js
+catalog/frontend/mcp.html
+.setup/
+*.tgz
+dist/

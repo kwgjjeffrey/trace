@@ -1,0 +1,29 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing immutable version tag
+        required: true
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node setup/setup.mjs install
+      - run: npm test
+      - run: node release/build.mjs
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          test "$TAG" = "v$(node -p 'require("./package.json").version')"
+          gh release create "$TAG" dist/*.tgz dist/trace-release.json --verify-tag --generate-notes

@@ -1,0 +1,47 @@
+{
+  "name": "@personal/trace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node catalog/scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "setup:check": "node setup/setup.mjs check",
+    "setup:install": "node setup/setup.mjs install",
+    "setup:update": "node setup/setup.mjs update"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "@modelcontextprotocol/ext-apps": "1.1.2",
+    "yaml": "^2.8.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "SKILL.md",
+    "AGENTS.md",
+    "trace.mjs",
+    "lib/",
+    "instrumentation/",
+    "analysis/",
+    "catalog/SKILL.md",
+    "catalog/AGENTS.md",
+    "catalog/scripts/",
+    "catalog/frontend/index.html",
+    "catalog/frontend/view.mjs",
+    "setup/",
+    "tests/",
+    "npm-shrinkwrap.json",
+    "distribution.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kwgjjeffrey/trace.git"
+  },
+  "license": "MIT"
+}
