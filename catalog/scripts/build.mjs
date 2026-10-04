@@ -1,3 +1,8 @@
-import {build} from 'esbuild';import fs from 'node:fs';
-await build({entryPoints:['catalog/frontend/view.mjs'],bundle:true,format:'esm',write:true,outfile:'catalog/frontend/view.bundle.js',minify:true});
-const html=fs.readFileSync('catalog/frontend/index.html','utf8');fs.writeFileSync('catalog/frontend/mcp.html',html.replace('<script type="module" src="/view.bundle.js"></script>','<script type="module">'+fs.readFileSync('catalog/frontend/view.bundle.js','utf8').replace(/<\/script/gi,'<\\/script')+'</script>'));
+import {build} from 'esbuild';
+import fs from 'node:fs';
+import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('../../',import.meta.url));
+const file=name=>fileURLToPath(new URL('../frontend/'+name,import.meta.url));
+await build({absWorkingDir:root,entryPoints:[file('view.mjs')],bundle:true,format:'esm',outfile:file('view.bundle.js'),minify:true});
+const html=fs.readFileSync(file('index.html'),'utf8');
+fs.writeFileSync(file('mcp.html'),html.replace('<script type="module" src="/view.bundle.js"></script>','<script type="module">'+fs.readFileSync(file('view.bundle.js'),'utf8').replace(/<\/script/gi,'<\\/script')+'</script>'));

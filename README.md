@@ -19,6 +19,8 @@ Node.js 20+, npm and tar are required. The source package excludes dependencies 
 node trace/trace.mjs operations --repo /path/to/project
 node trace/trace.mjs app --repo /path/to/project --config /private/connection.json
 node trace/trace.mjs mcp --repo /path/to/project --config /private/connection.json
+node trace/trace.mjs prompts --repo /path/to/project --config /private/connection.json --id <trace-id>
+node trace/trace.mjs prompts --repo /path/to/project --config /private/connection.json --id <trace-id> --span <span-id>
 ```
 
 The project `tracing/registry.yaml` references service/artifact-owned registries. No registry compilation or path replacement. See the capability SKILL.md files for instrumentation, analysis, catalog and setup.
@@ -41,3 +43,5 @@ Clone this repository, run setup install and npm test. Capability implementation
 ## Current scope
 
 Grafana/Tempo queries return bounded samples, not population metrics. MCP App host rendering depends on host extension support. GUI navigation requires a project locator adapter. Asynchronous context boundaries and clock behavior need project-specific acceptance tests.
+
+Trace inspection orders spans by parent relationships, reports missing parents and shows inclusive service boundaries without adding nested/parallel durations. Prompt inspection lists assembly metadata first and fetches one selected body; the App uses the same APIs. Every span can resolve a repository source location with an explicit revision-mismatch indication. Instrumentation guidance covers full parser/GUI inventory, durable consumers, per-invocation Agent command context and calibrated monotonic timing.

@@ -12,3 +12,7 @@ Source locations resolve from span attributes against the configured repo. Check
 Respect clock quality/uncertainty. Single-host monotonic durations are reliable; cross-host timestamp gaps within uncertainty cannot establish order or network latency. Use parent relationships to establish causality.
 
 For Honeycomb, use `python analysis/scripts/honeycomb.py --credentials <private-file> context` and then trace/spans or a bounded allowlisted call. Install the official MCP dependency from analysis/scripts/requirements.txt in a dedicated environment. No project or credentials path is inferred.
+
+For prompt engineering review, run `prompts --id <trace-id>` to list captured assemblies with kind/stage/template/source and truncation/redaction flags. Then `prompts --id <trace-id> --span <span-id>` returns that one payload. Compare actual-dispatch assembly with previews; previews do not prove what the runtime received. Never claim a truncated capture is the complete instruction. Default analysis should not flood the Agent context with every prompt.
+
+Trace output lists inclusive boundaries per service and orders spans by parent links. A layer duration includes downstream waiting; never sum nested layers or overlapping requests as total latency. Missing parents remain explicit.
