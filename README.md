@@ -12,11 +12,13 @@ The left list shows operation name, description and source location, with the av
 
 Click the card itself. The right header shows its file, owning component/object and method, plus a **Grafana** link carrying the operation filter, datasource and matching one-hour range. Below it, the real project GUI navigates to the corresponding control or result region and breathes with a cyan highlight. Inspection does not execute that business action.
 
-![Operation descriptions, provider percentiles, component/method and real GUI preview](docs/images/colab-catalog.jpg)
+![Operation descriptions, component/method and real GUI control highlight](docs/images/colab-catalog.png)
 
-For a Skill entry, the same area displays its actual registered command, such as `colab-browser open`.
+This screenshot shows the no-samples state for the selected time range; percentile values appear when matching samples are available.
 
-![Registered Skill command with its source and Grafana destination](docs/images/colab-command.jpg)
+For a Skill entry, the same area displays its actual registered command, such as `colab-browser withdraw`.
+
+![Registered Skill command with its source and Grafana destination](docs/images/colab-command.png)
 
 ### Trace details belong in Grafana
 
@@ -30,7 +32,7 @@ The human browser uses its own Grafana login. The backend queries Tempo with pro
 
 Source locations distinguish handlers even when they share a file: `files.withdraw` resolves to `desktop/ui/src/main.tsx → App → withdrawFiles`, while `files.retry` resolves to `App → retryFiles`. Anonymous callbacks identify their owning component and hook/event. The `source` command returns the same path, object and function fields, giving an Agent a concrete code owner to inspect during debugging.
 
-![Source location identifies the owning component and handler](docs/images/colab-source.jpg)
+The GUI screenshot above shows `MessagesView → send` alongside its file path and highlighted control.
 
 ### One context for a human and an Agent
 
