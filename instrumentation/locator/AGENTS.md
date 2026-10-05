@@ -1,3 +1,5 @@
 # Page locator development
 
 Own the framework-independent browser protocol, safe navigation, DOM location and breathing styles. Project adapters own URL/authentication, route declarations, registry access and diagnostic activation. No Colab-specific names, credentials, server discovery or service assumptions belong in the runtime. Installation ships source with a hash receipt, not a compiled registry projection. The module remains inert unless explicitly enabled and checks both origin and parent window. Keep unavailable controls distinct from fallback regions. Retain this capability's engineering rationale here rather than its consumer SKILL.md.
+
+Embedding integration is agent-owned work, not a manual prerequisite delegated to the skill consumer. The header inspector intentionally reports evidence rather than implementing a partial CSP evaluator: multiple enforced policies, redirects, authentication, ancestor chains and browser cookie policy require real browser acceptance. Serving-policy edits remain project-specific; the generic runtime does not rewrite security headers.
