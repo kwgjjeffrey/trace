@@ -33,12 +33,21 @@ if(!/^v\d+\.\d+\.\d+$/.test(r.tag_name))throw Error('Invalid release tag');
 for(const name of ['trace-release.json',`trace-${r.tag_name.slice(1)}.tgz`]){
  const asset=r.assets.find(a=>a.name===name);if(!asset)throw Error('Release asset missing');
  const url=new URL(asset.browser_download_url);if(url.origin!=='https://github.com'||!url.pathname.startsWith('/'+repo+'/releases/download/'+r.tag_name+'/'))throw Error('Unexpected release URL');
- fs.writeFileSync(dir+'/'+(name.endsWith('.tgz')?'archive-url':'manifest-url'),url.href);
+ const api=new URL(asset.url);if(api.origin!=='https://api.github.com'||!new RegExp('^/repos/'+repo+'/releases/assets/[0-9]+$').test(api.pathname))throw Error('Unexpected asset API URL');
+ fs.writeFileSync(dir+'/'+(name.endsWith('.tgz')?'archive-url':'manifest-url'),api.href);
 }
 fs.writeFileSync(dir+'/version',r.tag_name.slice(1));
 JS
-fetch "$(cat "$work/manifest-url")" "$work/manifest.json"
-fetch "$(cat "$work/archive-url")" "$work/trace.tgz"
+# Use the same public Asset API as managed upgrades; no GitHub login is needed.
+node --input-type=module - "$work" <<'JS'
+import fs from 'node:fs';
+const dir=process.argv[2];
+for(const [input,output] of [['manifest-url','manifest.json'],['archive-url','trace.tgz']]){
+ const response=await fetch(fs.readFileSync(dir+'/'+input,'utf8'),{headers:{Accept:'application/octet-stream','User-Agent':'trace-skill'},signal:AbortSignal.timeout(60000)});
+ if(!response.ok)throw Error('Release asset HTTP '+response.status);
+ fs.writeFileSync(dir+'/'+output,Buffer.from(await response.arrayBuffer()));
+}
+JS
 fetch "https://api.github.com/repos/$repo/git/ref/tags/v$(cat "$work/version")" "$work/tag.json"
 node --input-type=module - "$work" <<'JS'
 import fs from 'node:fs';
