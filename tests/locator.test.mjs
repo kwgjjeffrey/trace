@@ -20,6 +20,8 @@ test('GUI locating returns explicit project page and embedding endpoints',async(
   delete process.env.TRACE_LOCATOR_URL;delete process.env.TRACE_LOCATOR_EMBED_URL;
   const metadata=await dispatch(repo,'locate',{operation:'example.open'});
   assert.equal(metadata.url,null);assert.equal(metadata.embedUrl,null);
+  const index=path.join(repo,'tracing/registry.yaml');const document=JSON.parse(fs.readFileSync(index));document.project.previewUrl='http://localhost:5100/diagnostics';fs.writeFileSync(index,JSON.stringify(document));
+  assert.equal((await dispatch(repo,'locate',{operation:'example.open'})).embedUrl,document.project.previewUrl);
  }finally{
   for(const [key,value] of [['TRACE_LOCATOR_URL',previous.page],['TRACE_LOCATOR_EMBED_URL',previous.embed]]){if(value===undefined)delete process.env[key];else process.env[key]=value;}
   fs.rmSync(repo,{recursive:true,force:true});

@@ -16,3 +16,5 @@ Retrospective — Agent Colab retrofit:
 Enabled-path regression: a mechanical edit accidentally passed a root-only `parent` variable to HTTP child creation. Offline parser tests missed it because telemetry was disabled. Add an enabled request-span regression and require a live Agent-issued CLI invocation before release; type/syntax checks do not catch Python runtime name resolution.
 
 Live delivery findings: GUI batches can saturate a serial best-effort proxy, losing an entire coarse Core batch. Intake acceptance must expose queued/delivered/rejected evidence; account for queue rejection as a drop, bound memory and delivery concurrency, and verify causal parent completeness after realistic GUI/Agent traffic. Avoid declaring chain success from UI state alone.
+
+Page location is a separate installable capability under locator/. The Colab extraction showed that a reusable registry is insufficient without a runtime consumer, module installation and real iframe acceptance. Keep authentication and page declarations project-owned; install the same runtime through the public CLI and test from the formal catalog.

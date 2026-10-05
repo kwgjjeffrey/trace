@@ -38,3 +38,5 @@ Before diagnosing a dispatch failure, check request state, current log timestamp
 For a telemetry proxy, bound memory and concurrent delivery, expose acceptance/delivery/drop counters including queue rejections, and validate a representative GUI burst together with an Agent execution. Wait for cloud readback and check all expected parent IDs before declaring delivery complete.
 
 Register source at the actual operation owner: `source.path`, `source.object` (component/class/namespace when present), and `source.function` (method, function or actual callback). Resolve ownership from the real invocation; do not replace distinct handlers with a shared file name or fabricated `.effect` method. Anonymous callbacks must name their owning hook/event.
+
+For GUI preview and breathing highlights, use [locator/SKILL.md](locator/SKILL.md). Install the standard module with locator-install, connect the live registry and bind control markers; do not create a project-specific highlighting implementation.

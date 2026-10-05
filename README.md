@@ -16,6 +16,18 @@ The installer supports macOS, Linux and WSL. It reuses Node.js 20+ when availabl
 
 If Node is not on your PATH, invoke commands through `sh <trace-skill>/setup/run.sh trace.mjs <command>` or `sh <trace-skill>/setup/run.sh setup/setup.mjs <command>`. The launcher finds the private runtime automatically.
 
+## Add GUI location to your project
+
+```sh
+node <trace-skill>/trace.mjs locator-install --repo /path/to/project --directory frontend/diagnostics/page-locator
+```
+
+This installs a framework-independent source module with TypeScript declarations and a version/hash receipt. Import `mountLocator`, explicitly enable it in the developer diagnostic page, supply the live operation registry and allowed catalog origins, and bind controls with `data-trace-target`. Set `project.previewUrl` in the repository index. The Skill's [page locator instructions](instrumentation/locator/SKILL.md) cover navigation, iframe policy and acceptance.
+
+The module owns message validation, safe navigation, scrolling and breathing highlights. Your project owns authentication, page URLs, diagnostic activation and route-specific registration. It does not execute highlighted business actions or copy the registry. The same install command upgrades unchanged module files and rejects local modifications.
+
+Agent Colab now uses this installed module; its former custom highlighter has been removed. The remaining adapter only proxies its authenticated GUI and supplies the live registry and diagnostic bootstrap.
+
 ## Case study: Agent Colab
 
 Agent Colab has a desktop GUI and Agent Skill commands, both calling a Rust Local Core and a separately deployed Rust Server. Each artifact owns its tracing registry; the repository index references them. Instrumentation, interface bindings, the human catalog and Agent tools consume the same operation IDs and semantic descriptions.

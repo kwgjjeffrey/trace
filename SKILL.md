@@ -15,4 +15,4 @@ Read only the capability needed for the task:
 - Investigate performance or spans: [analysis/SKILL.md](analysis/SKILL.md).
 - Open the catalog or MCP App: [catalog/SKILL.md](catalog/SKILL.md).
 
-`operations`, `operation_metrics --operation <id>`, `executions --operation <id>`, `performance --operation <id>`, `trace --id <trace-id>`, `prompts --id <trace-id> [--span <span-id>]`, and `source` return JSON. Instrumentation commands are `init` and `check`. The repository supplies its own registry, adapters and protected configuration; never infer a project from this skill's installation path.
+`operations`, `operation_metrics --operation <id>`, `executions --operation <id>`, `performance --operation <id>`, `trace --id <trace-id>`, `prompts --id <trace-id> [--span <span-id>]`, and `source` return JSON. Instrumentation commands are `init`, `check`, and `locator-install --directory <unit-relative-directory>`. The repository supplies its own registry, adapters and protected configuration; never infer a project from this skill's installation path.

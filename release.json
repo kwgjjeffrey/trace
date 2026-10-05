@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "package": "trace",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "kind": "local",
   "provider": {
     "type": "github-releases",
@@ -12,7 +12,7 @@
     "commitPolicy": "freeze HEAD into trace-release.json at build"
   },
   "artifacts": [
-    "dist/trace-0.2.2.tgz",
+    "dist/trace-0.3.0.tgz",
     "dist/trace-release.json"
   ],
   "commands": {
