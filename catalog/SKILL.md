@@ -1,10 +1,12 @@
 ---
 name: trace-catalog
-description: Open a repository's trace operation catalog in a browser or an MCP Apps host.
+description: Open a repository trace operation catalog with provider percentiles and real interface previews.
 ---
 
-Run `node <trace-skill>/trace.mjs app --repo <repo> --config <private-config>` to open the local catalog. Run `mcp` instead of `app` to serve the same operations over stdio MCP. In a connected MCP Apps host, call `trace_operations`.
+Run `node <this-skill>/trace.mjs app --repo <repo> --config <protected-config>`. Open the printed URL. For MCP hosts, use the `mcp` command with the same repository and configuration.
 
-Read entry descriptions and coverage before selecting an operation. Use the catalog to query recent traces, span chains, source locations and bounded performance samples. Open the returned Grafana link for a concrete trace.
+Select an operation card. The left list shows its ID, description, source path and available Grafana P50/P90/P95 for matching root spans over the last hour. Missing provider percentiles are omitted; no data and query failure are distinguished. The right header shows source and a Grafana Drilldown link carrying that operation filter; the body previews its real GUI or displays its registered command. Trace and span inspection belong in Grafana or the analysis Skill.
 
-A GUI locator is provided by the project. Set `TRACE_LOCATOR_URL` to its location endpoint when available; it receives an operation query parameter. Without it the catalog returns page/target metadata. Verify the actual target before claiming successful navigation. Command entries return the registered executable and arguments.
+For an embedded project GUI, set `TRACE_LOCATOR_EMBED_URL` to the project's adapter URL and `TRACE_LOCATOR_URL` to its standalone fallback. The adapter must accept the configured catalog origin and the `trace.locate` message from its parent. Repeated selections preserve GUI state. Navigation must never execute the target business action.
+
+Provider configuration defaults to `trace.entry.id`. For existing projects with other attributes, set `operationAttribute` and optionally `originAttribute` in the protected Grafana configuration. These apply equally to percentile queries and Drilldown links.

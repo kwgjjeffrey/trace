@@ -16,3 +16,5 @@ For Honeycomb, use `python analysis/scripts/honeycomb.py --credentials <private-
 For prompt engineering review, run `prompts --id <trace-id>` to list captured assemblies with kind/stage/template/source and truncation/redaction flags. Then `prompts --id <trace-id> --span <span-id>` returns that one payload. Compare actual-dispatch assembly with previews; previews do not prove what the runtime received. Never claim a truncated capture is the complete instruction. Default analysis should not flood the Agent context with every prompt.
 
 Trace output lists inclusive boundaries per service and orders spans by parent links. A layer duration includes downstream waiting; never sum nested layers or overlapping requests as total latency. Missing parents remain explicit.
+
+Use `operation_metrics --operation <id>` for Grafana-computed root span P50/P90/P95 over the last hour and the matching Drilldown URL. Missing percentiles remain null. This differs from the bounded trace-envelope summary returned by `performance`; do not equate the two populations.
