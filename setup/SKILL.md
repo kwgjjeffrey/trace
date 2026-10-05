@@ -3,7 +3,9 @@ name: trace-setup
 description: Install, check or update the trace tool's local runtime dependencies and MCP App build.
 ---
 
-Run `node <trace-skill>/setup/setup.mjs check` before first use or when startup fails. Node.js 20+ and npm are required. If Node is missing, use the official distribution or the user's package manager.
+For first installation, run `curl -fsSL https://raw.githubusercontent.com/kwgjjeffrey/trace/main/setup/install.sh | sh`. It downloads a verified release and installs missing runtime dependencies privately. Use `TRACE_INSTALL_DIR` for another agent host.
+
+Run `sh <trace-skill>/setup/run.sh setup/setup.mjs check` before first use or when startup fails. When Node is absent from PATH, use this launcher for setup commands and `sh <trace-skill>/setup/run.sh trace.mjs <command>` for Trace commands.
 
 Run `node <trace-skill>/setup/setup.mjs install` to install locked dependencies and build the MCP App locally. It does not register an MCP server, install project dependencies, or change credentials. Python Honeycomb queries have an optional separate dependency in analysis/scripts/requirements.txt; install it in a dedicated Python environment only when needed.
 

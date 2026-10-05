@@ -3,6 +3,8 @@ name: trace
 description: Instrument registered end-to-end operations, investigate traces and performance, or open a shared operation catalog for any repository.
 ---
 
+If Node is not on PATH, use `sh <this-skill>/setup/run.sh trace.mjs <command>`; the launcher finds the bootstrap runtime.
+
 Resolve the target repository. Run `node <this-skill>/trace.mjs <command> --repo <repo>`; pass protected provider configuration with `--config` when querying.
 
 For first use or a dependency/startup failure, read [setup/SKILL.md](setup/SKILL.md).

@@ -2,6 +2,20 @@
 
 A personal, reusable tracing Skill and MCP App: unit-owned operation registries, end-to-end OpenTelemetry instrumentation, trace analysis and GUI catalog.
 
+## Install
+
+Give your agent this instruction:
+
+> Install the Trace Skill from the command below. Download the latest GitHub release, verify it, detect and install missing runtime dependencies, then check that the Skill is ready. Preserve any existing project configuration and credentials. Restart the agent connection if needed.
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/kwgjjeffrey/trace/main/setup/install.sh | sh
+```
+
+The installer supports macOS, Linux and WSL. It reuses Node.js 20+ when available; otherwise it downloads and verifies an official Node.js 22 runtime into a private user directory, without sudo or changing global Node. It verifies the release archive size and SHA-256, installs locked dependencies, builds the App and checks readiness. The default destination is `${CODEX_HOME:-~/.codex}/skills/trace`; set `TRACE_INSTALL_DIR` to choose another agent's Skills directory. Existing installations use the staged update and backup flow; provider credentials stay outside the Skill.
+
+If Node is not on your PATH, invoke commands through `sh <trace-skill>/setup/run.sh trace.mjs <command>` or `sh <trace-skill>/setup/run.sh setup/setup.mjs <command>`. The launcher finds the private runtime automatically.
+
 ## Case study: Agent Colab
 
 Agent Colab has a desktop GUI and Agent Skill commands, both calling a Rust Local Core and a separately deployed Rust Server. Each artifact owns its tracing registry; the repository index references them. Instrumentation, interface bindings, the human catalog and Agent tools consume the same operation IDs and semantic descriptions.
@@ -47,17 +61,6 @@ A human can see which operation is instrumented, its real interface, current per
 | Code referenced by a span | `source --id <trace-id> --span <span-id> --repo <repo> --config <private-config>` |
 
 Commands use `node <trace-skill>/trace.mjs`. Project-specific interface navigation remains in the project's adapter. Configure `operationAttribute` and optional `originAttribute` for an existing project's field names; new projects default to `trace.entry.id`. These settings are shared by metrics and Grafana links. The reusable Skill has no implicit Agent Colab paths or credentials.
-
-## Install from GitHub Releases
-
-Download `trace-<version>.tgz` and `trace-release.json` from Releases. Verify the archive SHA-256 and size against the manifest, extract the `package/` directory into your agent's Skills directory as `trace/`, then run:
-
-```sh
-node trace/setup/setup.mjs install
-node trace/setup/setup.mjs check
-```
-
-Node.js 20+, npm and tar are required. The source package excludes dependencies and generated App bundles. Setup installs locked dependencies and builds locally.
 
 ## Use
 
