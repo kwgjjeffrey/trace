@@ -1,4 +1,5 @@
-import {pathToFileURL} from 'node:url';
+import {fileURLToPath} from 'node:url';
+import fs from 'node:fs';
 
 export function inspectEmbedding(headers, catalogOrigin) {
  const origin = new URL(catalogOrigin);
@@ -17,7 +18,7 @@ export function inspectEmbedding(headers, catalogOrigin) {
  };
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && fs.realpathSync(fileURLToPath(import.meta.url)) === fs.realpathSync(process.argv[1])) {
  const [url, origin] = process.argv.slice(2);
  if (!url || !origin) throw Error('Usage: check-embedding.mjs <diagnostic-url> <catalog-origin>');
  const target = new URL(url);
