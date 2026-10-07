@@ -4,3 +4,4 @@
 
 .hero{padding-top:32px}.hero h1{font-size:clamp(40px,5vw,64px);margin:22px 0}.hero .intro{margin:18px 0}.hero .narrative{margin-top:34px}.hero .flow-output{margin-top:16px}.hero .flow-output strong{font-size:42px}.hero .flow-svg{margin-block:10px 15px}.hero .actions{justify-content:center;margin-top:26px}.hero .narrative .flow-card p{min-height:58px}@media(max-width:600px){.hero h1{font-size:40px}.hero .actions{align-items:center}.hero .narrative .flow-card p{min-height:0}}
 .narrative .agent .flow-svg .pipe{fill:#121019;stroke:#9d75cb66}.narrative .agent .flow-svg .dev-pipe{stroke:#ab80e8}.narrative .flow-svg .requirement{fill:#efffc00a}
+.narrative .flow-svg .idle-indicator circle{fill:none}
