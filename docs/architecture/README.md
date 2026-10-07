@@ -27,7 +27,7 @@ Add an owned capability directory with a service contract and task-facing Skill.
 
 ## Compatibility
 
-Agent DevOps Suite is the product identity. The existing `@personal/trace` package identity, repository URL, `trace.mjs`, `trace_*` tools, `ui://trace/catalog`, environment variables and installation directory remain transport/distribution compatibility identifiers. Renaming them all at once would break installed upgraders and target repositories. The new CLI alias delegates to the existing implementation.
+Agent Dev Suite is the product identity. The existing `@personal/trace` package identity, repository URL, `trace.mjs`, `trace_*` tools, `ui://trace/catalog`, environment variables and installation directory remain transport/distribution compatibility identifiers. Renaming them all at once would break installed upgraders and target repositories. The new CLI alias delegates to the existing implementation.
 
 ## Limits
 

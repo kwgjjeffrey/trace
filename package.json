@@ -1,6 +1,6 @@
 {
   "name": "@personal/trace",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -58,16 +58,17 @@
     "catalog/ui/",
     "components.json",
     "tsconfig.json",
-    "agent-devops.mjs",
+    "agent-dev.mjs",
     "docs/configuration.md",
     "docs/architecture/",
     "CONTRIBUTING.md",
-    "SECURITY.md"
+    "SECURITY.md",
+    "agent-devops.mjs"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kwgjjeffrey/trace.git"
   },
   "license": "MIT",
-  "description": "Agent DevOps Suite: tracing, regression testing, shared CLI, MCP App and browser GUI"
+  "description": "Agent Dev Suite: tracing, regression testing, shared CLI, MCP App and browser GUI"
 }

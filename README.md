@@ -1,4 +1,4 @@
-# Agent DevOps Suite
+# Agent Dev Suite
 
 A local toolkit for coding agents and developers to instrument operations, investigate traces, run regression tests and inspect evidence together. Agent Skills, a deterministic CLI, an MCP App and a browser GUI share the same capability services.
 
@@ -13,15 +13,15 @@ A local toolkit for coding agents and developers to instrument operations, inves
 - A shared browser workspace and MCP App for operation catalogs and regression records
 - Verified GitHub Release installation and staged upgrades with source backups
 
-The product name is **Agent DevOps Suite**. The GitHub repository, `trace.mjs`, `trace_*` MCP tools, installation path and release asset names remain compatible with existing Trace installations. `agent-devops.mjs` is the suite entry point in source. This is one release unit today; capabilities are modules, not independently versioned products.
+The product name is **Agent Dev Suite**. The former `agent-devops.mjs` entry point also remains a compatibility alias. The GitHub repository, `trace.mjs`, `trace_*` MCP tools, installation path and release asset names remain compatible with existing Trace installations. `agent-dev.mjs` is the suite entry point in source. This is one release unit today; capabilities are modules, not independently versioned products.
 
-[Product website](https://agent-devops.zhiyuanwangluo.online) · [Configuration](docs/configuration.md) · [Architecture](docs/architecture/README.md)
+[Product website](https://agent-dev.zhiyuanwangluo.online) · [Configuration](docs/configuration.md) · [Architecture](docs/architecture/README.md)
 
 ## Install
 
 Give your agent this instruction:
 
-> Install Agent DevOps Suite from the command below. Download the latest GitHub release, verify it, detect and install missing runtime dependencies, then check that the Skill is ready. Preserve any existing project configuration and credentials. Restart the agent connection if needed.
+> Install Agent Dev Suite from the command below. Download the latest GitHub release, verify it, detect and install missing runtime dependencies, then check that the Skill is ready. Preserve any existing project configuration and credentials. Restart the agent connection if needed.
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/kwgjjeffrey/trace/main/setup/install.sh | sh
@@ -161,7 +161,7 @@ See [provider configuration](docs/configuration.md) for separate query/export se
 | Directory | Responsibility |
 | --- | --- |
 | `SKILL.md` and capability Skills | On-demand agent workflow instructions |
-| `trace.mjs`, `agent-devops.mjs`, `lib/` | CLI routing and shared contracts |
+| `trace.mjs`, `agent-dev.mjs`, `lib/` | CLI routing and shared contracts |
 | `instrumentation/` | Live registry validation, adapters and GUI locator module |
 | `analysis/` | Provider queries, trace interpretation and source evidence |
 | `regression_test/` | Case discovery, planning, runner lifecycle and record persistence |

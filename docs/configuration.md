@@ -31,8 +31,8 @@ Input shape (replace all placeholders with your own deployment):
 The command returns the connection file path, never the token. It writes `connection.json` and a separate `credentials.json` with mode 0600, under a mode-0700 per-project directory at `~/.config/trace/<project>/`. Existing files for that project are replaced only by this explicit configure action. Unique project IDs isolate connection profiles.
 
 ```sh
-node <suite>/agent-devops.mjs operations --repo /path/to/project
-node <suite>/agent-devops.mjs executions --repo /path/to/project --operation example.open --config /private/connection.json
+node <suite>/agent-dev.mjs operations --repo /path/to/project
+node <suite>/agent-dev.mjs executions --repo /path/to/project --operation example.open --config /private/connection.json
 ```
 
 Existing `TRACE_CONFIG` remains supported. There is no automatic search for the maintainer's connection profile. For an older integration, set `operationAttribute` (for example, `colab.operation`) explicitly; generic defaults use `trace.entry.id`.

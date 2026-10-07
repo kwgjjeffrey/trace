@@ -1,6 +1,6 @@
 # Open-source acceptance — 2026-10-07
 
-Product: Agent DevOps Suite. Existing Trace distribution identifiers are retained for backward compatibility.
+Product: Agent Dev Suite. Existing Trace distribution identifiers are retained for backward compatibility.
 
 ## Verified locally
 

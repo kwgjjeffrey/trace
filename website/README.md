@@ -1,4 +1,4 @@
-# Agent DevOps Suite website
+# Agent Dev Suite website
 
 Standalone static product website. Design follows the Agent Colab family: dark green, lime, purple, generous typography and a reduced-motion-aware breathing workflow. Example run evidence is clearly labelled as an illustration.
 

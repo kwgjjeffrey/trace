@@ -1,6 +1,6 @@
 import metadata from '../../../../package.json';
 import {App} from '@modelcontextprotocol/ext-apps';
-const app=window.parent!==window?new App({name:'Agent DevOps Suite',version:metadata.version}):null;
+const app=window.parent!==window?new App({name:'Agent Dev Suite',version:metadata.version}):null;
 const connected=app?.connect();
 const regressionActions=['environment_options','environment','filter_options','agent_prompt','ask_agent','run_record','cases','case_source','plan','records','record','run','cancel','status'];
 export async function api<T=any>(action:string,args:Record<string,any>={},post=false):Promise<T>{

@@ -1,6 +1,6 @@
 ---
-name: agent-devops-suite
-description: Agent DevOps Suite — instrument registered end-to-end operations, investigate traces and performance, or open a shared operation catalog for any repository.
+name: agent-dev-suite
+description: Agent Dev Suite — instrument registered end-to-end operations, investigate traces and performance, or open a shared operation catalog for any repository.
 ---
 
 If Node is not on PATH, use `sh <this-skill>/setup/run.sh trace.mjs <command>`; the launcher finds the bootstrap runtime.
