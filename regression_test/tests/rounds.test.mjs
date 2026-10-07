@@ -1,5 +1,28 @@
-import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {save,record,runs,runRecord,recover} from '../record_store/store.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {save,record,records,runs,runRecord,recover} from '../record_store/store.mjs';
 test('round grouping preserves historical failures and only replaces selected evidence',()=>{const repo=fs.mkdtempSync(path.join(os.tmpdir(),'trace-round-'));const p={repo,recordRoot:path.join(repo,'.runs')};try{const a='20261007T010000Z-aaaaaaaa',b='20261007T020000Z-bbbbbbbb';save(p,{id:a,name:'Quality check',startedAt:'2026-10-07T01:00:00Z',durationMs:20,state:'completed',cases:[{id:'x',status:'failed',digest:'old'},{id:'y',status:'blocked'}]});save(p,{id:b,runId:a,roundNumber:2,name:'Repair',startedAt:'2026-10-07T02:00:00Z',durationMs:10,state:'completed',cases:[{id:'x',status:'passed',digest:'new'},{id:'y',status:'excluded'}]});assert.equal(runs(p).length,1);assert.equal(runs(p)[0].roundCount,2);assert.equal(runs(p)[0].durationMs,30);const group=runRecord(p,b);assert.equal(group.rounds.length,2);assert.deepEqual(group.counts,{passed:1,blocked:1});assert.equal(record(p,a).cases[0].status,'failed');assert.equal(group.cases[0].digest,'new');assert.throws(()=>runRecord(p,'../escape'));}finally{fs.rmSync(repo,{recursive:true,force:true});}});
 
 test('catalog recovery preserves a live standalone runner and seals an abandoned one',()=>{const repo=fs.mkdtempSync(path.join(os.tmpdir(),'trace-live-'));const p={repo,recordRoot:path.join(repo,'.runs')};try{for(const [suffix,pid] of [['aaaaaaaa',process.pid],['bbbbbbbb',2147483647]])save(p,{id:'20261007T010000Z-'+suffix,ownerPid:pid,name:'Recovery',startedAt:'2026-10-07T01:00:00Z',state:'running',cases:[{id:'x',status:'running'}]});recover(p);assert.equal(record(p,'20261007T010000Z-aaaaaaaa').state,'running');assert.equal(record(p,'20261007T010000Z-bbbbbbbb').state,'interrupted');}finally{fs.rmSync(repo,{recursive:true,force:true});}});
 test('latest terminal evidence survives pending running and excluded repair rows',()=>{const repo=fs.mkdtempSync(path.join(os.tmpdir(),'trace-latest-'));const p={repo,recordRoot:path.join(repo,'.runs')};try{const root='20261007T010000Z-aaaaaaaa';for(const [i,status] of ['passed','failed','running','pending','excluded'].entries()){const id=i?'20261007T0'+(i+1)+'0000Z-'+String(i).repeat(8):root;save(p,{id,runId:root,roundNumber:i+1,name:'Regression',startedAt:`2026-10-07T0${i+1}:00:00Z`,state:i===2?'running':'completed',cases:[{id:'x',status,digest:'source-'+i}]});}const result=runRecord(p,root);assert.deepEqual(result.counts,{failed:1});assert.equal(result.cases[0].roundNumber,2);assert.equal(result.cases[0].digest,'source-1');assert.equal(record(p,root).cases[0].status,'passed');}finally{fs.rmSync(repo,{recursive:true,force:true});}});
+
+test('list summaries avoid full snapshots and invalidate after an external writer changes YAML',()=>{
+ const repo=fs.mkdtempSync(path.join(os.tmpdir(),'trace-summary-')),p={repo,recordRoot:path.join(repo,'.runs')},id='20261007T010000Z-aaaaaaaa';const read=fs.readFileSync;
+ try{
+  save(p,{id,name:'Before',startedAt:'2026-10-07T01:00:00Z',state:'completed',cases:[]});
+  fs.readFileSync=function(file,...args){if(String(file).endsWith('regression.yaml'))throw Error('List must not read full YAML');return read.call(this,file,...args);};
+  assert.equal(runs(p)[0].name,'Before');fs.readFileSync=read;
+  fs.writeFileSync(path.join(p.recordRoot,id,'regression.yaml'),JSON.stringify({id,name:'Changed by another process',startedAt:'2026-10-07T01:00:00Z',state:'completed',cases:[]}));
+  assert.equal(records(p)[0].name,'Changed by another process');
+  fs.unlinkSync(path.join(p.recordRoot,id,'summary.json'));
+  assert.equal(records(p)[0].name,'Changed by another process');
+  assert.ok(fs.existsSync(path.join(p.recordRoot,id,'summary.json')));
+ }finally{fs.readFileSync=read;fs.rmSync(repo,{recursive:true,force:true});}
+});
+test('round detail reads only the selected Run snapshots',()=>{
+ const repo=fs.mkdtempSync(path.join(os.tmpdir(),'trace-scope-')),p={repo,recordRoot:path.join(repo,'.runs')},a='20261007T010000Z-aaaaaaaa',b='20261007T020000Z-bbbbbbbb';const read=fs.readFileSync,seen=[];
+ try{
+  for(const id of [a,b])save(p,{id,name:id,startedAt:'2026-10-07T01:00:00Z',state:'completed',cases:[]});
+  fs.readFileSync=function(file,...args){seen.push(String(file));return read.call(this,file,...args);};
+  assert.equal(runRecord(p,a).rounds.length,1);
+  assert.ok(!seen.some(f=>f.includes(b)&&f.endsWith('regression.yaml')));
+ }finally{fs.readFileSync=read;fs.rmSync(repo,{recursive:true,force:true});}
+});

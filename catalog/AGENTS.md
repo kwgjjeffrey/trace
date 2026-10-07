@@ -15,3 +15,5 @@ Source rendering must preserve registered object/component and function ownershi
 Product copy is English. Registry descriptions and embedded business content retain the project-authored language; never silently translate registry semantics in the viewer.
 
 Shared React/shadcn UI lives in catalog/ui. scripts/workspace.mjs composes tracing dispatch and the regression service; rendering must not own business cases or records. Browser HTTP and MCP use this composition. Script drawers show current source, not an archived historical script; highlight.js escapes source before rendering. Performance statistics remain lazy, provider-computed, bounded to three concurrent queries.
+
+Standalone catalog navigation uses hash routes so deep links work without server rewrite rules. The URL owns page, selected operation/Run and round; hashchange handles browser Back/Forward. Refresh must restore the same selection. Derived record summaries stay in the target Run directory and are rebuilt from YAML, never bundled into the skill.
