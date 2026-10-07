@@ -1,0 +1,1 @@
+export function groupResults<T extends {meta?:Record<string,any>;status?:string}>(cases:T[],field:string,options?:{moduleDepth?:number|string}):{key:string;cases:T[];counts:Record<string,number>;total:number}[];
