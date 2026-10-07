@@ -16,7 +16,7 @@ copy.addEventListener('click', async () => {
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const flows = [...document.querySelectorAll('[data-flow]')].map(card => {
   const mode = card.dataset.flow;
-  const dev = mode === 'before' ? 6 : .06;
+  const dev = (215 / 105 * 2) / (mode === 'before' ? 1 : 100);
   const verify = mode === 'before' ? 2 : mode === 'agent' ? 1 : .02;
   const cadence = verify;
   const group = card.querySelector('.flow-rings');
