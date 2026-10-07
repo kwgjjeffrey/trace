@@ -1,0 +1,3 @@
+# Environment implementation
+
+Generic code loads only explicitly registered project adapters. Business discovery and authentication stay in the project. Resolve once per run, check the fixed binding before each selected case, persist the same binding and inject it into the worker. Never auto-grant permission or replace a resource during execution. Preflight timeout is bounded; adapters must bound their own transport work too. REQUIREMENTS is literal AST data; discovery never executes cases. Credential-shaped fields are rejected, but adapters remain responsible for safe output values. Environment errors must not be certified product failures.

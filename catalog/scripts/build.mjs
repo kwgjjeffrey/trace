@@ -1,8 +1,8 @@
-import {build} from 'esbuild';
-import fs from 'node:fs';
-import {fileURLToPath} from 'node:url';
+import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';import {build} from 'vite';
 const root=fileURLToPath(new URL('../../',import.meta.url));
-const file=name=>fileURLToPath(new URL('../frontend/'+name,import.meta.url));
-await build({absWorkingDir:root,entryPoints:[file('view.mjs')],bundle:true,format:'esm',outfile:file('view.bundle.js'),minify:true});
-const html=fs.readFileSync(file('index.html'),'utf8');
-fs.writeFileSync(file('mcp.html'),html.replace('<script type="module" src="/view.bundle.js"></script>','<script type="module">'+fs.readFileSync(file('view.bundle.js'),'utf8').replace(/<\/script/gi,'<\\/script')+'</script>'));
+await build({configFile:path.join(root,'catalog/ui/vite.config.ts')});
+// MCP serves the same React app as one self-contained resource, not a second UI implementation.
+const output=path.join(root,'catalog/.runtime/ui');let html=fs.readFileSync(path.join(output,'index.html'),'utf8');
+html=html.replace(/<script[^>]+src="([^"]+)"[^>]*><\/script>/g,(_,url)=>'<script type="module">'+fs.readFileSync(path.join(output,url.replace(/^\//,'')),'utf8').replace(/<\/script/gi,'<\\/script')+'</script>');
+html=html.replace(/<link[^>]+href="([^"]+\.css)"[^>]*>/g,(_,url)=>'<style>'+fs.readFileSync(path.join(output,url.replace(/^\//,'')),'utf8')+'</style>');
+fs.writeFileSync(path.join(output,'mcp.html'),html);

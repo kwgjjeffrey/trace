@@ -4,3 +4,10 @@ catalog/frontend/mcp.html
 .setup/
 *.tgz
 dist/
+
+catalog/.runtime/
+regression_test/node_modules/
+regression_test/.runtime/
+
+website/public/
+website/.wrangler/

@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import crypto from 'node:crypto';import {fileURLToPath} from 'node:url';import {spawnSync} from 'node:child_process';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+function runtimeSupported(){const [major,minor]=process.versions.node.split('.').map(Number);return major===20&&minor>=19||major===22&&minor>=12||major>22;}
 const npm=process.platform==='win32'?'npm.cmd':'npm';
 function run(command,args,cwd=root){const result=spawnSync(command,args,{cwd,stdio:'inherit'});if(result.error)throw result.error;if(result.status!==0)throw Error(`${command} exited ${result.status}`);}
 function fingerprint(dir){return crypto.createHash('sha256').update(fs.readFileSync(path.join(dir,'npm-shrinkwrap.json'))).digest('hex');}
 function check(){const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json'))),state=path.join(root,'.setup/state.json');let receipt=null;try{receipt=JSON.parse(fs.readFileSync(state));}catch{}
-const runtimeOK=Number(process.versions.node.split('.')[0])>=20;
-const dependencies=['@modelcontextprotocol/sdk','@modelcontextprotocol/ext-apps','yaml','zod','esbuild'].every(p=>fs.existsSync(path.join(root,'node_modules',p,'package.json')));
-const built=['view.bundle.js','mcp.html'].every(f=>fs.existsSync(path.join(root,'catalog/frontend',f)));
+const runtimeOK=runtimeSupported();
+const dependencies=['@modelcontextprotocol/sdk','@modelcontextprotocol/ext-apps','yaml','zod','esbuild','playwright','highlight.js','vite'].every(p=>fs.existsSync(path.join(root,'node_modules',p,'package.json')));
+const built=['index.html','mcp.html'].every(f=>fs.existsSync(path.join(root,'catalog/.runtime/ui',f)));
 return {version:pkg.version,node:process.versions.node,runtimeOK,dependencies,built,lockMatches:receipt?.lockDigest===fingerprint(root),ready:runtimeOK&&dependencies&&built&&receipt?.lockDigest===fingerprint(root)};}
-function install(dir=root){if(Number(process.versions.node.split('.')[0])<20)throw Error('Node.js >=20 required; install from the official Node.js distribution or your package manager');run(npm,['ci','--ignore-scripts','--include=dev'],dir);run(npm,['run','build'],dir);fs.mkdirSync(path.join(dir,'.setup'),{recursive:true});fs.writeFileSync(path.join(dir,'.setup/state.json'),JSON.stringify({version:JSON.parse(fs.readFileSync(path.join(dir,'package.json'))).version,lockDigest:fingerprint(dir),installedAt:new Date().toISOString()},null,2));}
+function install(dir=root){if(!runtimeSupported())throw Error('Node.js 20.19+ or 22.12+ required; install from the official Node.js distribution or your package manager');run(npm,['ci','--ignore-scripts','--include=dev'],dir);run(npm,['run','build'],dir);fs.mkdirSync(path.join(dir,'.setup'),{recursive:true});fs.writeFileSync(path.join(dir,'.setup/state.json'),JSON.stringify({version:JSON.parse(fs.readFileSync(path.join(dir,'package.json'))).version,lockDigest:fingerprint(dir),installedAt:new Date().toISOString()},null,2));}
 // Distribution is defined by npm's package file allowlist, not by recursively copying an installation.
 function files(dir){const r=spawnSync(npm,['pack','--dry-run','--json','--ignore-scripts'],{cwd:dir,encoding:'utf8'});if(r.status!==0)throw Error('Cannot enumerate source package');return JSON.parse(r.stdout)[0].files.map(f=>f.path).filter(p=>!p.endsWith('.tgz'));}
 function update(source){source=fs.realpathSync(source);if(source===fs.realpathSync(root))throw Error('Update source must be a separate source directory');const manifest=JSON.parse(fs.readFileSync(path.join(source,'package.json')));if(manifest.name!=='@personal/trace')throw Error('Not a trace source package');const stage=fs.mkdtempSync(path.join(os.tmpdir(),'trace-update-'));const selected=files(source);try{for(const file of selected){const from=path.resolve(source,file);if(!from.startsWith(source+path.sep)||!fs.realpathSync(from).startsWith(source+path.sep))throw Error('Unsafe package path');const to=path.join(stage,file);fs.mkdirSync(path.dirname(to),{recursive:true});fs.copyFileSync(from,to);}install(stage);run(npm,['test'],stage);

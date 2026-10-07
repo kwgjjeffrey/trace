@@ -1,0 +1,32 @@
+---
+name: trace-regression-execution
+description: Implement regression script steps, functional assertions and explicit timing checks.
+---
+
+For selecting and running cases, use [Run regression](../SKILL.md#run-regression).
+
+Scripts use ctx.page, ctx.action(name,{target,action,value}), ctx.observe(name,{target,read}), ctx.assert(name,actual,expected), ctx.command(name,executable,args,{input,capture}), ctx.measure(name,fn,{maximumMs}), ctx.screenshot(name) and ctx.block(reason). Optional cleanup(ctx) runs after success or failure. Give operations and assertions meaningful names. Create case-owned fixtures or restore shared fixtures in finally/cleanup so a second run starts with the same preconditions. Await request-specific committed results and UI readiness before asserting.
+
+Configure GUI baseUrl, unique readiness selector, named targets, browser profile and prerequisite flags in the project index. Use one business landmark for readiness; broad selectors matching several controls fail strict locator resolution. A dedicated Chrome profile needs its initial login. Keep cookie handling and browser lifecycle out of case scripts.
+
+measure includes the explicitly measured runner scope and its overhead. For provider timing use ctx.performance(name,{traceId,maximumMs}) with a configured project telemetryAdapter exporting performance(args) and real durationMs. Missing telemetry blocks the assertion; do not substitute runner timing for provider spans. Keep secrets out of assertions, command arguments and screenshots.
+
+## Selection and execution options
+
+Discover cases with `cases` and available metadata values with `filter_options`. Select the smallest useful scope, then call `plan` before `run` with exactly the same filters. Check selected cases, exclusion reasons and discovery diagnostics; fix diagnostics before execution.
+
+Use `--meta '<JSON object>'` to select metadata: for example `{"module":["channels"],"surface":["gui","skill"],"priority":["critical"],"effects":["read-only"]}`. Different fields are combined with AND; values within one field use OR. Array fields such as covers, requires and affectedPaths match any selected member. Every registered metadata field can be selected; unknown keys are errors. `filter_options` returns the project's actual fields and values, also used by the GUI.
+
+Choose `--profile full|release|change`: full uses all matching trial and active cases; release uses critical cases plus explicitly changed modules; change requires `--changedModules <comma-separated modules>` or explicit IDs. `--ids <comma-separated IDs>`, `--modules <modules>` and `--surface <entry>` remain available. Explicit IDs select those cases instead of the profile's default priority/impact scope; other filters still apply.
+
+Trial and active cases run by default. Validate a rotten case only with explicit `--ids` or `meta.id`, together with `--validateInactive true`. Obsolete cases stay excluded. External writes remain blocked unless explicitly authorized with `--allowExternalWrites true`; metadata selection alone never grants permission to write. Optional `--timeoutMs` sets the per-case timeout and `--name` labels the regression.
+
+Standalone CLI `run` waits and exits nonzero for failures, errors, blockers or cancellation. To use the running GUI service, add `--server http://127.0.0.1:<port>`; then `run` returns an ID. Poll `record --id <run-id>` and cancel through that same server with `cancel --id <run-id>`. Interrupt a standalone CLI process to cancel it. MCP equivalents are regression_filter_options, regression_plan, regression_run, regression_record and regression_cancel, with the same filters in args.
+
+Analyze `record --id <run-id> --problems`, report expected/actual evidence and performance boundaries, and preserve failed runs. Diagnose product defects separately from script rot or removed features; do not change case lifecycle merely to make a regression green.
+
+Use command input for stdin data. Set capture:false when output contains capabilities or private prompts; avoid recording those values in assertions or command arguments.
+
+Before writing assertions, inspect the actual public response and the owning interface contract. Use committed resource IDs to scope GUI assertions; quoted text and navigation labels are not proof of the intended result. For asynchronous publication, verify eventual restored bytes during cleanup. Cross-member scenarios require distinct authenticated identities; a second device of the same owner proves only cross-device behavior. Diagnose unavailable prerequisites separately from product assertions.
+
+Verify the running artifact version and response schema when they differ from repository source. Diagnose a failed GUI mutation from its actual HTTP response and failure screenshot before retrying it. Interrupt standalone CLI runs normally so the runner releases its worker and browser profile; do not terminate only the parent process.

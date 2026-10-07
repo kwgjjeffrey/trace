@@ -10,7 +10,7 @@ fetch() { curl --fail --location --silent --show-error --retry 3 --connect-timeo
 hash() { if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | cut -d ' ' -f 1; else shasum -a 256 "$1" | cut -d ' ' -f 1; fi; }
 for tool in curl tar; do command -v "$tool" >/dev/null 2>&1 || { echo "Missing $tool; ask your agent to install it and retry." >&2; exit 1; }; done
 if ! command -v sha256sum >/dev/null 2>&1 && ! command -v shasum >/dev/null 2>&1; then echo 'A SHA-256 utility is required.' >&2; exit 1; fi
-if ! (command -v node >/dev/null 2>&1 && node -e 'process.exit(+process.versions.node.split(".")[0]>=20?0:1)' && command -v npm >/dev/null 2>&1); then
+if ! (command -v node >/dev/null 2>&1 && node -e 'const [m,n]=process.versions.node.split(".").map(Number);process.exit(m===20&&n>=19||m===22&&n>=12||m>22?0:1)' && command -v npm >/dev/null 2>&1); then
  case $(uname -s) in Darwin) platform=darwin;; Linux) platform=linux;; *) echo 'Use macOS, Linux or WSL for this installer.' >&2; exit 1;; esac
  case $(uname -m) in arm64|aarch64) arch=arm64;; x86_64|amd64) arch=x64;; *) echo 'Unsupported architecture.' >&2; exit 1;; esac
  if ! [ -x "$runtime_dir/bin/node" ]; then

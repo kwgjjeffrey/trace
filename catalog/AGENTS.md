@@ -13,3 +13,5 @@ Human catalog is an operation selector, not a second trace inspector. Left cards
 Source rendering must preserve registered object/component and function ownership, not only the file path. Multiple operations in one file are valid; inspect actual invocation ownership before changing paths. Anonymous callbacks name their containing hook/event rather than fabricated method names. GUI and source tools consume the same registration fields.
 
 Product copy is English. Registry descriptions and embedded business content retain the project-authored language; never silently translate registry semantics in the viewer.
+
+Shared React/shadcn UI lives in catalog/ui. scripts/workspace.mjs composes tracing dispatch and the regression service; rendering must not own business cases or records. Browser HTTP and MCP use this composition. Script drawers show current source, not an archived historical script; highlight.js escapes source before rendering. Performance statistics remain lazy, provider-computed, bounded to three concurrent queries.
