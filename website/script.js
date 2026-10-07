@@ -9,15 +9,15 @@ copy.addEventListener('click', async () => {
   }
 });
 
-// A pipeline with downstream backpressure. Ratios are a conceptual model:
-// baseline verifies one item every 2s; Agent every 1s; Suite every .02s.
-// Development is longer than verification, with the same baseline velocity.
-// Agent development is 100x faster but admits new work only at verification pace.
+// Display timing is deliberately compressed for readability. The 100× labels
+// describe the conceptual narrative, not a literal animation-speed multiplier.
+// Faster development still waits for the slower verification stage.
+const visualAcceleration = 10;
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const flows = [...document.querySelectorAll('[data-flow]')].map(card => {
   const mode = card.dataset.flow;
-  const dev = (215 / 105 * 2) / (mode === 'before' ? 1 : 100);
-  const verify = mode === 'before' ? 2 : mode === 'agent' ? 1 : .02;
+  const dev = (215 / 105 * 2) / (mode === 'before' ? 1 : visualAcceleration);
+  const verify = mode === 'before' ? 2 : mode === 'agent' ? 1 : 2 / visualAcceleration;
   const cadence = verify;
   const group = card.querySelector('.flow-rings');
   const rings = Array.from({length:mode === 'suite' ? 5 : 6}, () => {
