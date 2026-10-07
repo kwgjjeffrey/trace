@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci --ignore-scripts
-      - run: npm test
       - run: npm run typecheck
       - run: npm run build
+      - run: npm test
       - run: sh -n setup/install.sh
