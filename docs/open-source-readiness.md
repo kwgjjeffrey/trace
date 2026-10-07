@@ -27,3 +27,7 @@ Further release and deployed-site evidence is recorded after publication, not in
 - Isolated v0.3.3 → v0.4.0 staged source update passed, including build, tests and retained backup. Public artifact upgrade is checked separately.
 - Website deployed to `agent-devops.zhiyuanwangluo.online`, Worker version `7a2aab2b-d775-46c6-b706-880033714100`. HTTPS returned 200 and public HTML matched source bytes.
 - First remote CI exposed a missing generated MCP resource: tests must follow build in a clean checkout. CI and contribution instructions now build before testing.
+
+- Public GitHub artifact upgrade v0.3.3 → v0.4.0 passed; readiness and release receipt match the published source/hash, and a source backup remains available. Post-upgrade check reports no update available.
+- Corrected remote CI succeeded: https://github.com/kwgjjeffrey/trace/actions/runs/37633047092 (Linux/macOS, Node 22/24).
+- Dependency audit found one moderate YAML advisory in 2.8.0; v0.4.1 updates to the compatible patched 2.9.1.
