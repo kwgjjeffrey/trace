@@ -1,6 +1,6 @@
 import fs from 'node:fs';import path from 'node:path';import {pathToFileURL} from 'node:url';import {spawn} from 'node:child_process';import crypto from 'node:crypto';
 import {isDeepStrictEqual} from 'node:util';
-import {openBrowser} from '../browser/runtime.mjs';import {inside,shortError} from '../lib/paths.mjs';
+import {openBrowser,connectLease} from '../browser/runtime.mjs';import {inside,shortError} from '../lib/paths.mjs';
 let driver;let cancelled=false;process.on('SIGTERM',async()=>{cancelled=true;await driver?.close();process.exit(143);});
 const input=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));const output=process.argv[3];const {repo,case:c,config,evidenceDir}=input;let result={status:'running',steps:[],assertions:[],measurements:[],traces:[]};const started=performance.now();
 function write(){fs.writeFileSync(output,JSON.stringify({...result,durationMs:performance.now()-started}),{mode:0o600});}write();
@@ -8,6 +8,7 @@ function fail(name,actual,expected){const ok=isDeepStrictEqual(actual,expected);
 async function step(name,target,fn){const t=performance.now();const row={name,target,status:'running'};result.steps.push(row);write();try{const v=await fn();row.status='passed';return v;}catch(e){row.status='failed';row.error=shortError(e);throw e;}finally{row.durationMs=performance.now()-t;write();}}
 const ctx={repo,resources:input.resources||{},parameters:input.parameters||{},baseUrl:config.baseUrl,input:config.input||{},runId:input.runId,caseId:c.id,
  assert:fail,
+ async newPage(){if(!process.send||!driver)throw Error('Run-owned browser required');const requestId=crypto.randomUUID();const response=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{process.off('message',receive);reject(Error('Auxiliary tab allocation timeout'));},10000);function receive(m){if(m?.requestId!==requestId)return;clearTimeout(timer);process.off('message',receive);m.error?reject(Error(m.error)):resolve(m);}process.on('message',receive);process.send({type:'newPage',requestId});});return driver.findPage(response.pageUrl);},
  block(reason){const e=Error(reason);e.kind='blocked';throw e;},
  async action(name,{target,action,value}){return step(name,target,async()=>{if(!ctx.page)throw Error('GUI context unavailable');const selector=config.targets?.[target];if(!selector)throw Error('Unregistered test target '+target);const l=ctx.page.locator(selector);if(action==='click')await l.click();else if(action==='fill')await l.fill(value);else throw Error('Unknown action');});},
  async observe(name,{target,read='text'}){return step(name,target,async()=>{const selector=config.targets?.[target];if(!selector)throw Error('Unregistered target');const l=ctx.page.locator(selector);return read==='count'?l.count():l.textContent();});},
@@ -18,7 +19,7 @@ const ctx={repo,resources:input.resources||{},parameters:input.parameters||{},ba
 };
 try{
  const file=inside(repo,c.file);if(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')!==c.digest)throw Error('Case changed after planning');
- if(c.meta.surface==='gui'){driver=await openBrowser(config.browser);ctx.page=driver.page;result.diagnostics=[];ctx.page.on('pageerror',e=>{result.diagnostics.push({kind:'pageerror',message:shortError(e)});write();});ctx.page.on('response',r=>{if(r.status()>=400){result.diagnostics.push({kind:'http',path:new URL(r.url()).pathname,status:r.status()});write();}});ctx.page.on('requestfailed',r=>{result.diagnostics.push({kind:'requestfailed',path:new URL(r.url()).pathname,error:r.failure()?.errorText});write();});await ctx.page.goto(config.baseUrl,{waitUntil:'domcontentloaded'});if(config.readySelector)await ctx.page.locator(config.readySelector).waitFor({timeout:30000});}
+ if(c.meta.surface==='gui'){driver=input.browserLease?await connectLease(input.browserLease):await openBrowser(config.browser);ctx.page=driver.page;result.diagnostics=[];ctx.page.on('pageerror',e=>{result.diagnostics.push({kind:'pageerror',message:shortError(e)});write();});ctx.page.on('response',r=>{if(r.status()>=400){result.diagnostics.push({kind:'http',path:new URL(r.url()).pathname,status:r.status()});write();}});ctx.page.on('requestfailed',r=>{result.diagnostics.push({kind:'requestfailed',path:new URL(r.url()).pathname,error:r.failure()?.errorText});write();});await ctx.page.goto(config.baseUrl,{waitUntil:'domcontentloaded'});if(config.readySelector)await ctx.page.locator(config.readySelector).waitFor({timeout:30000});}
  const module=await import(pathToFileURL(file).href);let primary;try{await module.run(ctx);}catch(e){primary=e;}finally{if(module.cleanup)try{await module.cleanup(ctx);}catch(e){result.cleanupError=shortError(e);if(!primary)primary=e;}}if(primary)throw primary;
  if(!result.assertions.length)throw Error('No explicit assertions executed');result.status='passed';
 }catch(e){result.status=e.kind||'error';result.error=shortError(e);if(ctx.page)try{await ctx.screenshot('Failure state');}catch{} }

@@ -42,3 +42,7 @@ Verification: 32 generic tests and typecheck passed; staged installation built s
 Implemented filtered case discovery and selected-only plans, conservative bounded scheduling (1–8), explicit reviewed-case opt-in and resource locks, case-specific worker IPC, all-worker cancellation, per-case start/end evidence, and optional selected-resource requirements in environment resolution. Added GUI concurrency control and matching agent-prompt arguments. Project init templates now route from root instructions and teach fixture reuse/scope selection and trial qualification. 48 tests passed; typecheck/build passed. Agent Colab five actual cases passed concurrently in 12.48 s versus 17.21 s serially; this does not claim universal speedup.
 
 Planning now deduplicates identical read-only preflight requirements within its snapshot and caps distinct probes at four; execution deliberately rechecks each case. Contract validation covers both behaviors.
+
+### Run-owned tab lifecycle verified (2026-10-08)
+
+One persistent Chrome window, default-context tabs, parent-owned auxiliary allocation via IPC, per-case finally cleanup and final owned-process shutdown replace per-case context/windows. Repeated headed batches (3 concurrent leases plus auxiliary tab) return to the original blank tab; worker disconnect does not close siblings. Colab real GUI observation at concurrency 3 recorded one window and no monotonically accumulating tabs; project storage dependencies are explicit locks. All 33 regression-tool tests passed.
