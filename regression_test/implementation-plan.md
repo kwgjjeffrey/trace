@@ -54,3 +54,7 @@ Regression records now use one shadcn Tabs selection: Latest and each historical
 ### Inline round comparison (2026-10-08)
 
 The previous tab selection misinterpreted the requested design and is superseded. Grouped regression results now show Case, Latest, Round 1…N and Script columns directly. Group rows summarize each column; case rows show outcome, script wall time and assertion counts, and historical cells open their own evidence. Missing execution is a dash. Legacy round/result URL parameters no longer restrict the table. Script time is worker elapsed time including setup, actions, waits, assertions and cleanup, not provider trace latency. Browser verification confirmed the repaired onboarding case appears Passed / Error / Passed across Latest / Round 1 / Round 2 and its Round 1 error detail opens. Typecheck passed; installed local catalog updated.
+
+### Group overview and performance evidence (2026-10-08)
+
+Group rows show only latest case counts/outcomes; historical aggregate cells are blank. Expanded case rows retain Latest and round comparison. Results cells and evidence drawers now render stored trace measurements and explicitly distinguish operation timing measured by the runner. No trace evidence is invented when missing: the current Colab runs have no linked provider performance measurements, and GUI explicitly says not collected. Script total duration remains diagnostic evidence, not performance.
