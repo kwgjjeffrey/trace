@@ -9,3 +9,9 @@ export function performanceSummary(item){
  }
  return [...groups.values()].map(g=>{const samples=g.samples.sort((a,b)=>a-b);return {...g,count:samples.length,statistic:samples.length===1?'single':'p90',durationMs:samples[Math.ceil(samples.length*.9)-1]};});
 }
+// The list is a case-level distribution of all captured registered operation
+// durations in that result, as requested. It is neither a sum nor script elapsed time.
+export function casePerformanceP90(item){
+ const samples=(item.traces||[]).filter(t=>t.entryId&&t.boundary==='operation-end-to-end'&&Number.isFinite(t.durationMs)&&t.durationMs>=0).map(t=>t.durationMs).sort((a,b)=>a-b);
+ return samples.length?{durationMs:samples[Math.ceil(samples.length*.9)-1],count:samples.length}:null;
+}
