@@ -20,6 +20,8 @@ export function parseCase(text,file){
  if(!u||!m||typeof u.name!=='string'||!u.name.trim()||typeof u.description!=='string'||!u.description.trim())throw Error('Export literal USECASE {name,description} and META');
  if(typeof m.id!=='string'||!/^[-\w.]+$/.test(m.id)||typeof m.module!=='string'||!/^[-\w]+(?:\/[-\w]+)*$/.test(m.module))throw Error('Invalid case id/module');
  for(const [key,values]of Object.entries(enums))if(!values.includes(m[key]))throw Error('Invalid '+key);
+ if(m.parallelSafe!==undefined&&typeof m.parallelSafe!=='boolean')throw Error('Invalid parallelSafe');
+ if(m.locks!==undefined&&(!Array.isArray(m.locks)||m.locks.some(x=>typeof x!=='string'||!x.trim())))throw Error('Invalid locks');
  for(const key of ['covers','requires','affectedPaths'])if(!Array.isArray(m[key]??[])||(m[key]??[]).some(x=>typeof x!=='string'))throw Error('Invalid '+key);
  if(['rotten','obsolete'].includes(m.status)&&!m.statusReason)throw Error('Inactive case requires statusReason');
  return {id:m.id,name:u.name,description:u.description,runnable,requirements,meta:m,file,digest:crypto.createHash('sha256').update(text).digest('hex')};

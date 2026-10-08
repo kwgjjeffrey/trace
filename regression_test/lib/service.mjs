@@ -9,8 +9,8 @@ export async function service(p,action,args={}){
  if(action==='environment'){const r=await resolveEnvironment(p,args);return checkEnvironment(r,args.requirements||{});}
  if(action==='filter_options')return filterOptions(catalog(p).cases);
  if(action==='agent_prompt')return agentPrompt(p,plan(p,args));
- if(action==='cases')return catalog(p);
- if(action==='plan')return environmentPlan(p,plan(p,args),args);
+ if(action==='cases'){const c=catalog(p);if(args.meta||args.ids||args.modules||args.surface||args.profile)return {...c,cases:plan(p,args).items.filter(c=>c.selected)};return c;}
+ if(action==='plan'){const result=await environmentPlan(p,plan(p,args),args);if(args.selectedOnly===true||args.selectedOnly==='true')result.items=result.items.filter(c=>c.selected);return result;}
  if(action==='source'){const c=catalog(p).cases.find(c=>c.id===args.id);if(!c)throw Error('Unknown case');return {path:c.file,absolutePath:inside(p.repo,c.file),content:fs.readFileSync(inside(p.repo,c.file),'utf8')};}
  if(action==='status')return setStatus(p,args.id,args.status,args.reason);
  if(action==='records')return runs(p);

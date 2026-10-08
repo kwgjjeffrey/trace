@@ -30,3 +30,11 @@ Use command input for stdin data. Set capture:false when output contains capabil
 Before writing assertions, inspect the actual public response and the owning interface contract. Use committed resource IDs to scope GUI assertions; quoted text and navigation labels are not proof of the intended result. For asynchronous publication, verify eventual restored bytes during cleanup. Cross-member scenarios require distinct authenticated identities; a second device of the same owner proves only cross-device behavior. Diagnose unavailable prerequisites separately from product assertions.
 
 Verify the running artifact version and response schema when they differ from repository source. Diagnose a failed GUI mutation from its actual HTTP response and failure screenshot before retrying it. Interrupt standalone CLI runs normally so the runner releases its worker and browser profile; do not terminate only the parent process.
+
+## Efficient scoped execution
+
+Use `cases --meta '{"module":["<path>"]}'` to discover the affected cases, then `plan --selectedOnly true` with that selection. Routine changes use explicit IDs or changed modules; release/installation and diagnostics suites run when those boundaries change. Keep existing failure evidence and rerun only repaired or newly affected cases in the same Run.
+
+Use `--concurrency 2` (1–8) to overlap reviewed independent cases. A case opts in with literal `META.parallelSafe: true` and `META.locks: ["shared-resource"]`. Equal locks serialize; GUI cases always lock the common browser. Cases without opt-in remain repository-exclusive. Treat actor switching, process/transport controls, clipboard/native UI and shared fixture/cache writes as resources, even if business behavior is a read. Plan, run, GUI and agent prompts use the same concurrency option.
+
+Prepare reusable read fixtures once in the project environment and bind them through ctx. Do not seed a Channel/document per read test. Create owned targets only when creation, mutation, withdrawal or empty-state behavior is the thing being tested. Validate image fixtures by decoding them; wait for the completed submit state before reusing a composer; reveal hover controls before clicking; assert the whole intended UI region rather than a convenient child.

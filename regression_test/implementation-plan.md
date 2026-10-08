@@ -36,3 +36,9 @@ Formal runtime acceptance: run `20261006T025324Z-5d33dbe0` passed GUI and Skill 
 Verification: 32 generic tests and typecheck passed; staged installation built shared GUI. Real Colab run 20261007T093625Z-c5da8dfa has two passed scoped rounds. Browser verified round matrix and Ask Agent Copy/Copied feedback. No overall product readiness claim.
 
 2026-10-07: Added executable trial lifecycle, default trial+active selection, trial scaffold template, shared GUI badge/filter support and explicit evidence review guidance. Green runs never auto-promote. 33 contract tests pass, typecheck and catalog build pass; installed consumer and shared App updated locally.
+
+### 2026-10-08 efficiency audit
+
+Implemented filtered case discovery and selected-only plans, conservative bounded scheduling (1–8), explicit reviewed-case opt-in and resource locks, case-specific worker IPC, all-worker cancellation, per-case start/end evidence, and optional selected-resource requirements in environment resolution. Added GUI concurrency control and matching agent-prompt arguments. Project init templates now route from root instructions and teach fixture reuse/scope selection and trial qualification. 48 tests passed; typecheck/build passed. Agent Colab five actual cases passed concurrently in 12.48 s versus 17.21 s serially; this does not claim universal speedup.
+
+Planning now deduplicates identical read-only preflight requirements within its snapshot and caps distinct probes at four; execution deliberately rechecks each case. Contract validation covers both behaviors.

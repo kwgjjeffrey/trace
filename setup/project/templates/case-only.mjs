@@ -15,6 +15,8 @@ export const META = {
   origin: 'requirement', // requirement | bug | acceptance-gap
   status: 'trial', // Promote only after reviewing real execution, assertions and cleanup.
   effects: 'read-only', // isolated-write requires real disposable fixtures and scoped cleanup.
+  parallelSafe: false, // Opt in only after reviewing all shared state, caches and cleanup.
+  locks: [], // Stable names for shared actors, transport, sources or mutable fixtures.
   cost: 'fast', // Estimate until measured; never invent performance limits.
   covers: [], // Existing operation IDs, when registered; do not invent IDs.
   requires: [], // Match prerequisites explicitly configured in regression.config.yaml.
