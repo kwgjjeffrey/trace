@@ -62,3 +62,7 @@ Group rows show only latest case counts/outcomes; historical aggregate cells are
 ### Per-point performance summary (2026-10-08)
 
 Lists summarize comparable samples inside the displayed case result, by performance point and source: nearest-rank P90 for repeated samples; Single for one sample. They never combine unrelated points, sources, or historical rounds. Drawers retain samples. Provider performance assertions require an explicitly declared operation-end-to-end boundary; an arbitrary child-span duration is no longer accepted. Current Colab records still lack linked provider telemetry; operation timing is shown separately. Summary tests verify point/source separation, P90, single labeling and exclusion of unknown-span boundaries.
+
+### Correct performance source (2026-10-08)
+
+Runner/API timing was incorrectly promoted into list performance summaries. It is now excluded and remains diagnostic evidence in the drawer. List summaries accept only registered entry IDs with an explicit operation-end-to-end trace boundary. Regression-to-provider linkage remains incomplete: current Colab records do not capture and resolve their execution trace IDs, so no claim of performance acceptance is valid. Missing trace data is explicitly visible, never filled using unrelated global-window metrics or local API timers.
