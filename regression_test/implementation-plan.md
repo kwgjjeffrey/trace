@@ -70,3 +70,7 @@ Runner/API timing was incorrectly promoted into list performance summaries. It i
 ### Completed regression-to-Trace integration (2026-10-08)
 
 Generic telemetry collector captures exact execution IDs, queries the existing Trace analysis provider, selects registered completed operation spans, and freezes samples plus breakdowns in repository-owned records. Default vocabulary is trace.operation.id / trace.outcome; legacy project attributes are configuration mappings, not Colab code inside the tool. GUI and command adapters capture/propagate context without replacing business SDK instrumentation. Deferred budgets and list summaries share those snapshots; missing budget evidence is inconclusive/blocked. Real Colab GUI+Skill round 20261008T072817Z-90bc1801 saved 13 samples with no diagnostics, and repeat provider queries matched stored samples.
+
+### Compact performance comparison cells (2026-10-08)
+
+List cells now use a two-column metric/value grid: entry ID and P90 milliseconds, or plain milliseconds for a single sample. Sample counts, source prose and raw records stay out of the list. Every registered point remains present; names truncate with their full ID in the title when space is constrained. Actual browser verification at 1900px measured the eight-point GUI case row at 219px, with no sample/source paragraphs in its comparison cells.

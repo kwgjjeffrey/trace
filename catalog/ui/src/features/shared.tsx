@@ -1,3 +1,4 @@
+import {Fragment} from 'react';
 import {performanceSummary} from '../../../../regression_test/record_store/performance.mjs';
 import {CheckCircle2,XCircle,Clock,MinusCircle,TriangleAlert,LoaderCircle,FileCode2} from 'lucide-react';
 import {Badge} from '@/components/ui/badge';import {Button} from '@/components/ui/button';import {Sheet,SheetContent,SheetHeader,SheetTitle,SheetDescription} from '@/components/ui/sheet';
@@ -17,7 +18,8 @@ export function ErrorNotice({error}:{error:string|null}){return error?<Alert var
 const value=(v:any)=>v===undefined?'—':typeof v==='string'?v:JSON.stringify(v);
 export function RecordedPerformance({item,compact=false}:{item:TestCase;compact?:boolean}){
  const traces=(item.traces||[]).filter(t=>Number.isFinite(t.durationMs)),timings=(item.measurements||[]).filter(t=>Number.isFinite(t.durationMs));
- if(compact){const summaries=performanceSummary(item);return <div className="flex flex-col gap-1 text-xs text-muted-foreground">{summaries.length?summaries.map((m:any,i:number)=><div key={i}>{m.name} · {m.statistic==='p90'?'P90':'Single'} {duration(m.durationMs)} ({m.count} samples · end-to-end trace)</div>):<span>Trace performance: not collected</span>}</div>;}
+ if(compact){const summaries=performanceSummary(item).sort((a:any,b:any)=>a.name.localeCompare(b.name));const ms=(v:number)=>`${Math.round(v)} ms`;return <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 text-xs tabular-nums">{summaries.length?summaries.map((m:any,i:number)=><Fragment key={i}><span className="truncate text-muted-foreground" title={m.name}>{m.name}</span><span className="whitespace-nowrap">{m.statistic==='p90'?'P90 ':''}{ms(m.durationMs)}</span></Fragment>):<span className="col-span-2 text-muted-foreground">No trace data</span>}</div>;}
+
  return <div className="flex flex-col gap-1 text-xs text-muted-foreground">{traces.length?traces.map((t,i)=><div key={i}>{t.boundary==='operation-end-to-end'?'End-to-end trace':'Trace boundary unverified'} · {t.name||t.traceId}: {duration(t.durationMs)}{!compact&&t.grafanaUrl&&<a className="ml-2 underline" href={t.grafanaUrl} target="_blank" rel="noreferrer">Grafana</a>}</div>):<span>Trace performance: not collected</span>}{(item.telemetryDiagnostics||[]).filter(d=>d.state==='unavailable').map((d,i)=><div key={'missing-'+i}>Trace unavailable · {d.reason}</div>)}{timings.map((t,i)=><div key={'timing-'+i}>Runner diagnostics · {t.name}: {duration(t.durationMs)}</div>)}</div>;
 }
 export function CaseSheet({item,onClose,result=false}:{item:TestCase|null;onClose:()=>void;result?:boolean}){
