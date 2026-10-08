@@ -58,3 +58,7 @@ The previous tab selection misinterpreted the requested design and is superseded
 ### Group overview and performance evidence (2026-10-08)
 
 Group rows show only latest case counts/outcomes; historical aggregate cells are blank. Expanded case rows retain Latest and round comparison. Results cells and evidence drawers now render stored trace measurements and explicitly distinguish operation timing measured by the runner. No trace evidence is invented when missing: the current Colab runs have no linked provider performance measurements, and GUI explicitly says not collected. Script total duration remains diagnostic evidence, not performance.
+
+### Per-point performance summary (2026-10-08)
+
+Lists summarize comparable samples inside the displayed case result, by performance point and source: nearest-rank P90 for repeated samples; Single for one sample. They never combine unrelated points, sources, or historical rounds. Drawers retain samples. Provider performance assertions require an explicitly declared operation-end-to-end boundary; an arbitrary child-span duration is no longer accepted. Current Colab records still lack linked provider telemetry; operation timing is shown separately. Summary tests verify point/source separation, P90, single labeling and exclusion of unknown-span boundaries.
