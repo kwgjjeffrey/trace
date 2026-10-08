@@ -46,3 +46,7 @@ Planning now deduplicates identical read-only preflight requirements within its 
 ### Run-owned tab lifecycle verified (2026-10-08)
 
 One persistent Chrome window, default-context tabs, parent-owned auxiliary allocation via IPC, per-case finally cleanup and final owned-process shutdown replace per-case context/windows. Repeated headed batches (3 concurrent leases plus auxiliary tab) return to the original blank tab; worker disconnect does not close siblings. Colab real GUI observation at concurrency 3 recorded one window and no monotonically accumulating tabs; the initial Session timeout cause remains unproven; speculative project-wide navigation locks were removed. All 33 regression-tool tests passed.
+
+### Single results selection verified (2026-10-08)
+
+Regression records now use one shadcn Tabs selection: Latest and each historical Round. That selection drives grouped totals and case detail rows, as well as scoped status/duration; there is no separate result-scope dropdown or comparison mode. The route's round parameter is authoritative, including old URLs containing results=latest. Browser UI verification on Run 20261008T035038Z-35e9136d confirmed Latest=6 rows, Round 1=6 rows, Round 2=1 row, reload preserving Round 2, returning to Latest removing round from the URL, and no Compare rounds control. Typecheck, build and 51 tool tests passed; installed skill and local catalog updated.
