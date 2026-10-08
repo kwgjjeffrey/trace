@@ -50,3 +50,7 @@ One persistent Chrome window, default-context tabs, parent-owned auxiliary alloc
 ### Single results selection verified (2026-10-08)
 
 Regression records now use one shadcn Tabs selection: Latest and each historical Round. That selection drives grouped totals and case detail rows, as well as scoped status/duration; there is no separate result-scope dropdown or comparison mode. The route's round parameter is authoritative, including old URLs containing results=latest. Browser UI verification on Run 20261008T035038Z-35e9136d confirmed Latest=6 rows, Round 1=6 rows, Round 2=1 row, reload preserving Round 2, returning to Latest removing round from the URL, and no Compare rounds control. Typecheck, build and 51 tool tests passed; installed skill and local catalog updated.
+
+### Inline round comparison (2026-10-08)
+
+The previous tab selection misinterpreted the requested design and is superseded. Grouped regression results now show Case, Latest, Round 1…N and Script columns directly. Group rows summarize each column; case rows show outcome, script wall time and assertion counts, and historical cells open their own evidence. Missing execution is a dash. Legacy round/result URL parameters no longer restrict the table. Script time is worker elapsed time including setup, actions, waits, assertions and cleanup, not provider trace latency. Browser verification confirmed the repaired onboarding case appears Passed / Error / Passed across Latest / Round 1 / Round 2 and its Round 1 error detail opens. Typecheck passed; installed local catalog updated.
