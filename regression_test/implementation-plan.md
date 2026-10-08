@@ -66,3 +66,7 @@ Lists summarize comparable samples inside the displayed case result, by performa
 ### Correct performance source (2026-10-08)
 
 Runner/API timing was incorrectly promoted into list performance summaries. It is now excluded and remains diagnostic evidence in the drawer. List summaries accept only registered entry IDs with an explicit operation-end-to-end trace boundary. Regression-to-provider linkage remains incomplete: current Colab records do not capture and resolve their execution trace IDs, so no claim of performance acceptance is valid. Missing trace data is explicitly visible, never filled using unrelated global-window metrics or local API timers.
+
+### Completed regression-to-Trace integration (2026-10-08)
+
+Generic telemetry collector captures exact execution IDs, queries the existing Trace analysis provider, selects registered completed operation spans, and freezes samples plus breakdowns in repository-owned records. Default vocabulary is trace.operation.id / trace.outcome; legacy project attributes are configuration mappings, not Colab code inside the tool. GUI and command adapters capture/propagate context without replacing business SDK instrumentation. Deferred budgets and list summaries share those snapshots; missing budget evidence is inconclusive/blocked. Real Colab GUI+Skill round 20261008T072817Z-90bc1801 saved 13 samples with no diagnostics, and repeat provider queries matched stored samples.

@@ -19,3 +19,5 @@ Preview with `plan`, then execute `run` using the same arguments. Inspect `recor
 ## Selection and execution options
 
 For metadata filters, execution modes or cancellation, read [execution/SKILL.md](execution/SKILL.md#selection-and-execution-options).
+
+For registered operation performance capture and budgets, load [Trace performance](telemetry/SKILL.md).
