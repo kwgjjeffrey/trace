@@ -4,7 +4,7 @@ test('workspace keeps tracing-only repositories usable and resolves project scri
  const repo=fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(),'trace-workspace-')));
  try{
   fs.mkdirSync(path.join(repo,'tracing'));fs.writeFileSync(path.join(repo,'tracing/registry.yaml'),'schemaVersion: 1\nproject: {id: independent}\nregistries: []\n');
-  assert.deepEqual(await workspace(repo,'workspace'),{project:path.basename(repo),regressionEnabled:false,performanceEnabled:true});
+  assert.deepEqual(await workspace(repo,'workspace'),{repo,project:path.basename(repo),regressionEnabled:false,performanceEnabled:true});
   assert.equal((await workspace(repo,'operations')).operations.length,0);
   await assert.rejects(()=>workspace(repo,'cases'),/No regression/);
   fs.mkdirSync(path.join(repo,'regression_test/cases'),{recursive:true});fs.writeFileSync(path.join(repo,'regression_test/regression.config.yaml'),'schemaVersion: 1\ncaseDirectories: [cases]\nregressionDirectory: .runs\n');

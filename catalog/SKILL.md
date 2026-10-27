@@ -3,7 +3,7 @@ name: trace-catalog
 description: Open a repository trace operation catalog with provider percentiles and real interface previews.
 ---
 
-Run `node <this-skill>/trace.mjs app --repo <repo> --config <protected-config>`. Open the printed URL. For MCP hosts, use the `mcp` command with the same repository and configuration.
+Run `node <this-skill>/trace.mjs app --repo <repo> --config <protected-config>`. Open the printed URL. The service is bound to that repository at startup; the page header shows its absolute path. A URL without a repo query parameter still uses that binding. To inspect another repository, start another instance with its own `--repo` and `--port`; do not reuse an existing service URL assuming it switches projects. For MCP hosts, use the `mcp` command with the same repository and configuration.
 
 Use Performance registry, Test cases and Regression records from the sidebar. Regression pages require a project-owned regression_test/regression.config.yaml.
 
