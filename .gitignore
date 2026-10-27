@@ -11,3 +11,5 @@ regression_test/.runtime/
 
 website/public/
 website/.wrangler/
+
+.data/
