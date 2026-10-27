@@ -17,3 +17,5 @@ Product copy is English. Registry descriptions and embedded business content ret
 Shared React/shadcn UI lives in catalog/ui. scripts/workspace.mjs composes tracing dispatch and the regression service; rendering must not own business cases or records. Browser HTTP and MCP use this composition. Script drawers show current source, not an archived historical script; highlight.js escapes source before rendering. Performance statistics remain lazy, provider-computed, bounded to three concurrent queries.
 
 Standalone catalog navigation uses hash routes so deep links work without server rewrite rules. The URL owns page, selected operation/Run and round; hashchange handles browser Back/Forward. Refresh must restore the same selection. Derived record summaries stay in the target Run directory and are rebuilt from YAML, never bundled into the skill.
+
+Round trend counts latest known case results cumulatively after each round, carrying unexecuted/excluded cases forward. Display failed, error and blocked separately; case counts are not deduplicated product bug counts. Keep the whole-Run trend independent of table grouping and Problems only filters.
